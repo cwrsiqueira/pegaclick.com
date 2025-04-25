@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /api.php
+Disallow: /config.php
+Disallow: /doc.php
+Disallow: /private/
