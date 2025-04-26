@@ -23,7 +23,7 @@ Ideal para quem busca uma alternativa simples e auto-hospedada ao Google Analyti
 2. Gere seu **Token de Acesso**.
 3. Adicione o script Pegaclick no seu site:
     ```html
-    <script src="https://seu-dominio.com/assets/pegaclick.js" defer></script>
+    <script src="https://pegaclick.carlosdev.com.br/assets/pegaclick.js" defer></script>
     <script>
         Pegaclick.init('SEU_TOKEN_AQUI');
     </script>
@@ -49,7 +49,7 @@ Pronto! Seus acessos e cliques serão registrados no seu painel de controle.
 ## 📚 Documentação
 
 A documentação básica já está embutida no próprio painel Pegaclick.  
-(Se quiser contribuir para uma documentação mais detalhada, veja as [Issues abertas](https://github.com/SEU-USUARIO/pegaclick/issues)).
+(Se quiser contribuir para uma documentação mais detalhada, veja as [Issues abertas](https://github.com/cwrsiqueira/pegaclick.com/issues)).
 
 ---
 
@@ -62,7 +62,7 @@ A documentação básica já está embutida no próprio painel Pegaclick.
 - APIs públicas
 - Plugin de integração para WordPress, WooCommerce etc.
 
-Veja mais ideias nas [Issues abertas](https://github.com/SEU-USUARIO/pegaclick/issues)!
+Veja mais ideias nas [Issues abertas](https://github.com/cwrsiqueira/pegaclick.com/issues)!
 
 ---
 
@@ -85,7 +85,7 @@ Sinta-se livre para usar, modificar e distribuir!
 
 ## 💬 Contato
 
-Desenvolvido por [Seu Nome Aqui].  
+Desenvolvido por Carlos Wagner Dev.  
 Se quiser conversar, sugerir ideias ou parcerias:
-- LinkedIn: [Seu LinkedIn]
-- GitHub: [Seu GitHub]
+- LinkedIn: [\[Seu LinkedIn\]](https://www.linkedin.com/in/carloswagner1975/)
+- GitHub: [\[Seu GitHub\]](https://github.com/cwrsiqueira/)

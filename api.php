@@ -1,4 +1,7 @@
 <?php
+define('PEGACLICK', true);
+require 'config.php';
+
 // Permitir CORS
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
@@ -8,8 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
 }
-
-$pdo = new PDO("mysql:host=localhost;dbname=pegaclick;charset=utf8mb4", 'root', '', [
+$pdo = new PDO("mysql:host=$host;dbname=$db;charset=$charset", $user, $pass, [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
 ]);
@@ -76,7 +78,7 @@ if ($evento === 'acesso') {
 $stmt = $pdo->prepare("
     INSERT INTO eventos (site_id, elemento_id, pagina, evento, quantidade)
     VALUES (?, ?, ?, ?, 1)
-    ON DUPLICATE KEY UPDATE 
+    ON DUPLICATE KEY UPDATE
         quantidade = quantidade + 1,
         updated_at = CURRENT_TIMESTAMP
 ");
