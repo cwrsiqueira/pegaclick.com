@@ -71,6 +71,39 @@ if ($siteIdSelecionado) {
             <a href="doc.php" class="btn btn-secondary mb-2">📄 Documentação</a>
         </div>
 
+        <?php if ($siteIdSelecionado): ?>
+            <div class="card p-4 bg-white">
+                <h2 class="h4 mb-3">Estatísticas do Site</h2>
+
+                <?php if (count($eventos) > 0): ?>
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Página</th>
+                                <th>Evento</th>
+                                <th>Elemento</th>
+                                <th>Descrição</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($eventos as $evento): ?>
+                                <tr>
+                                    <td><?= htmlspecialchars($evento['pagina']) ?></td>
+                                    <td><?= htmlspecialchars($evento['evento']) ?></td>
+                                    <td><?= htmlspecialchars($evento['nome_elemento'] ?? '-') ?></td>
+                                    <td><?= htmlspecialchars($evento['descricao'] ?? '-') ?></td>
+                                    <td class="text-center"><?= $evento['total'] ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php else: ?>
+                    <p class="text-muted">Nenhum evento registrado para este site.</p>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
+
         <div class="card p-4 bg-white mb-4">
             <h2 class="h4 mb-3">Seus Sites</h2>
 
@@ -104,39 +137,6 @@ if ($siteIdSelecionado) {
                 <p class="text-muted">Nenhum site cadastrado ainda.</p>
             <?php endif; ?>
         </div>
-
-        <?php if ($siteIdSelecionado): ?>
-            <div class="card p-4 bg-white">
-                <h2 class="h4 mb-3">Estatísticas do Site</h2>
-
-                <?php if (count($eventos) > 0): ?>
-                    <table class="table table-bordered table-hover">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>Página</th>
-                                <th>Evento</th>
-                                <th>Elemento</th>
-                                <th>Descrição</th>
-                                <th>Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($eventos as $evento): ?>
-                                <tr>
-                                    <td><?= htmlspecialchars($evento['pagina']) ?></td>
-                                    <td><?= htmlspecialchars($evento['evento']) ?></td>
-                                    <td><?= htmlspecialchars($evento['nome_elemento'] ?? '-') ?></td>
-                                    <td><?= htmlspecialchars($evento['descricao'] ?? '-') ?></td>
-                                    <td class="text-center"><?= $evento['total'] ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                <?php else: ?>
-                    <p class="text-muted">Nenhum evento registrado para este site.</p>
-                <?php endif; ?>
-            </div>
-        <?php endif; ?>
 
     </div>
 </body>
