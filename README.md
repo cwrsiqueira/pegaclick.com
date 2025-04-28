@@ -7,7 +7,7 @@ Ideal para quem busca uma alternativa simples e auto-hospedada ao Google Analyti
 
 ## 🎯 Funcionalidades
 
-- Monitoramento de acessos às páginas
+- Monitoramento automático de acessos às páginas
 - Registro de cliques em elementos marcados
 - Dashboard com estatísticas em tempo real
 - Integração fácil com qualquer site (via script JS)
@@ -87,5 +87,5 @@ Sinta-se livre para usar, modificar e distribuir!
 
 Desenvolvido por Carlos Wagner Dev.  
 Se quiser conversar, sugerir ideias ou parcerias:
-- LinkedIn: [\[Seu LinkedIn\]](https://www.linkedin.com/in/carloswagner1975/)
-- GitHub: [\[Seu GitHub\]](https://github.com/cwrsiqueira/)
+- LinkedIn: [Carlos Wagner](https://www.linkedin.com/in/carloswagner1975/)
+- GitHub: [cwrsiqueira](https://github.com/cwrsiqueira/)

@@ -2,7 +2,6 @@
 define('PEGACLICK', true);
 require 'config.php';
 
-// Permitir CORS
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
@@ -11,6 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
 }
+
 $pdo = new PDO("mysql:host=$host;dbname=$db;charset=$charset", $user, $pass, [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
@@ -29,7 +29,7 @@ if (!$token || !$pagina || !$evento) {
     exit;
 }
 
-$stmt = $pdo->prepare("SELECT id, monitorar_acesso FROM sites WHERE token_acesso = ?");
+$stmt = $pdo->prepare("SELECT id FROM sites WHERE token_acesso = ?");
 $stmt->execute([$token]);
 $site = $stmt->fetch();
 
@@ -41,36 +41,23 @@ if (!$site) {
 
 $siteId = $site['id'];
 
-// Definir elemento_id
+// Se for evento de acesso, elemento será sempre 'pagina'
 if ($evento === 'acesso') {
-    if (!$site['monitorar_acesso']) {
-        // Se não monitora acessos, ignorar
-        http_response_code(204);
-        exit;
-    }
+    $elemento = 'pagina';
+}
 
-    // Buscar o elemento 'pagina'
-    $stmt = $pdo->prepare("SELECT id FROM elementos_monitorados WHERE site_id = ? AND nome_elemento = ?");
-    $stmt->execute([$siteId, 'pagina']);
-    $el = $stmt->fetch();
+// Busca ou cria elemento monitorado
+$stmt = $pdo->prepare("SELECT id FROM elementos_monitorados WHERE site_id = ? AND nome_elemento = ?");
+$stmt->execute([$siteId, $elemento]);
+$el = $stmt->fetch();
 
-    if (!$el) {
-        http_response_code(204);
-        exit;
-    }
-
-    $elementoId = $el['id'];
+if (!$el) {
+    // Cadastrar elemento na hora se não existir
+    $stmt = $pdo->prepare("INSERT INTO elementos_monitorados (site_id, nome_elemento, descricao) VALUES (?, ?, ?)");
+    $descricao = ($evento === 'acesso') ? 'Monitoramento de acessos às páginas' : 'Elemento monitorado automaticamente';
+    $stmt->execute([$siteId, $elemento, $descricao]);
+    $elementoId = $pdo->lastInsertId();
 } else {
-    // Evento de click em elementos monitorados
-    $stmt = $pdo->prepare("SELECT id FROM elementos_monitorados WHERE site_id = ? AND nome_elemento = ?");
-    $stmt->execute([$siteId, $elemento]);
-    $el = $stmt->fetch();
-
-    if (!$el) {
-        http_response_code(204);
-        exit;
-    }
-
     $elementoId = $el['id'];
 }
 

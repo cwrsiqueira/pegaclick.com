@@ -30,27 +30,21 @@ verificaLogin();
                 </li>
                 <li class="list-group-item">
                     No seu site, adicione o seguinte código antes do fechamento da tag <code>&lt;/body&gt;</code>:
-                    <pre><code>&lt;script src="http://localhost/pegaclick.com/assets/pegaclick.js" defer&gt;&lt;/script&gt;
+                    <pre><code>&lt;script src="https://pegaclick.carlosdev.com.br/assets/pegaclick.js" defer&gt;&lt;/script&gt;
 &lt;script&gt;
   Pegaclick.init('SEU_TOKEN_AQUI');
 &lt;/script&gt;</code></pre>
                 </li>
                 <li class="list-group-item">
-                    Marque os elementos que você quer monitorar usando o atributo <code>data-monitorar-pegaclick</code> com o mesmo nome cadastrado.
-                    <br><br>Exemplo:
+                    Marque os elementos que você quer monitorar usando o atributo <code>data-monitorar-pegaclick</code> com o mesmo nome cadastrado.<br><br>Exemplo:
                     <pre><code>&lt;button data-monitorar-pegaclick="btn-enviar"&gt;Enviar&lt;/button&gt;</code></pre>
                 </li>
                 <li class="list-group-item">
                     O Pegaclick automaticamente enviará:
                     <ul>
-                        <li><strong>Um evento de acesso</strong> toda vez que a página for carregada.</li>
+                        <li><strong>Um evento de acesso</strong> toda vez que a página for carregada (sem precisar marcar manualmente).</li>
                         <li><strong>Um evento de clique</strong> sempre que o usuário clicar em elementos marcados corretamente.</li>
                     </ul>
-                </li>
-                <li class="list-group-item">
-                    No cadastro do site, você pode optar por monitorar também os acessos às páginas.
-                    Se habilitado, o sistema criará automaticamente um elemento chamado <code>pagina</code> para registrar esses acessos.
-                    Se desabilitado, somente cliques em elementos específicos serão monitorados.
                 </li>
                 <li class="list-group-item text-danger">
                     Importante:
