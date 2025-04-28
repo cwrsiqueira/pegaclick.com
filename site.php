@@ -129,7 +129,7 @@ foreach ($elementos as $el) {
                 </div>
                 <div class="col-md-4 d-flex align-items-end">
                     <button type="submit" class="btn btn-primary mx-2">Filtrar</button>
-                    <a class="btn btn-danger mx-2" href="http://localhost/pegaclick.com/site.php?site_id=<?= $siteId ?>">Limpar</a>
+                    <a class="btn btn-danger mx-2" href="site.php?site_id=<?= $siteId ?>">Limpar</a>
                 </div>
             </form>
         </div>

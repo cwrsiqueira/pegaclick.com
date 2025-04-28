@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 26-Abr-2025 às 01:58
+-- Tempo de geração: 28-Abr-2025 às 18:36
 -- Versão do servidor: 10.4.32-MariaDB
 -- versão do PHP: 8.2.12
 
@@ -47,6 +47,7 @@ CREATE TABLE `eventos` (
   `elemento_id` int(11) DEFAULT 0,
   `pagina` varchar(255) NOT NULL,
   `evento` varchar(100) NOT NULL,
+  `data_evento` date DEFAULT NULL,
   `quantidade` int(11) DEFAULT 1,
   `created_at` datetime DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -64,8 +65,7 @@ CREATE TABLE `sites` (
   `nome_site` varchar(255) NOT NULL,
   `url_base` varchar(255) NOT NULL,
   `token_acesso` varchar(255) NOT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
-  `monitorar_acesso` tinyint(1) DEFAULT 1
+  `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -98,7 +98,7 @@ ALTER TABLE `elementos_monitorados`
 --
 ALTER TABLE `eventos`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `evento_unico` (`site_id`,`elemento_id`,`pagina`,`evento`),
+  ADD UNIQUE KEY `evento_unico` (`site_id`,`elemento_id`,`pagina`,`evento`,`data_evento`),
   ADD KEY `elemento_id` (`elemento_id`);
 
 --

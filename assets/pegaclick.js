@@ -7,8 +7,8 @@ var Pegaclick = (function () {
             return;
         }
 
-        // fetch('https://pegaclick.carlosdev.com.br/api.php', {
-        fetch('http://localhost/pegaclick.com/api.php', {
+        fetch('https://pegaclick.carlosdev.com.br/api.php', {
+            // fetch('http://localhost/pegaclick.com/api.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
