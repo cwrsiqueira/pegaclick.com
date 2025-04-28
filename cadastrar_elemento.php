@@ -9,9 +9,11 @@ $stmt = $pdo->prepare("SELECT * FROM sites WHERE usuario_id = ?");
 $stmt->execute([$usuarioId]);
 $sites = $stmt->fetchAll();
 
+$siteId = $_GET['site_id'] ?? null;
+
 // Se o formulário foi enviado
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $siteId = $_POST['site_id'];
+    $siteId = $siteId ?? $_POST['site_id'];
     $nomeElemento = trim($_POST['nome_elemento']);
     $descricao = trim($_POST['descricao']);
 
@@ -19,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt = $pdo->prepare("INSERT INTO elementos_monitorados (site_id, nome_elemento, descricao) VALUES (?, ?, ?)");
     $stmt->execute([$siteId, $nomeElemento, $descricao]);
 
-    header('Location: index.php');
+    header('Location: site.php?site_id=' . $siteId);
     exit;
 }
 ?>
@@ -40,12 +42,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form method="POST" class="card p-4 bg-white">
             <div class="mb-3">
                 <label>Site:</label>
-                <select name="site_id" class="form-select" required>
+                <select class="form-select" disabled>
                     <option value="">Selecione um site</option>
                     <?php foreach ($sites as $site): ?>
-                        <option value="<?= $site['id'] ?>"><?= htmlspecialchars($site['nome_site']) ?></option>
+                        <option <?= ($siteId == $site['id']) ? 'selected' : '' ?> value="<?= $site['id'] ?>"><?= htmlspecialchars($site['nome_site']) ?></option>
                     <?php endforeach; ?>
                 </select>
+                <input type="hidden" name="site_id" value="<?= $siteId ?>">
             </div>
 
             <div class="mb-3">
@@ -61,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <button type="submit" class="btn btn-primary">Cadastrar Elemento</button>
-            <a href="index.php" class="btn btn-link">Voltar</a>
+            <a href="site.php?site_id=<?= $siteId ?>" class="btn btn-link">Voltar</a>
         </form>
     </div>
 </body>

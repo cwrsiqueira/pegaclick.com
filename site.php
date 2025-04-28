@@ -3,7 +3,6 @@ define('PEGACLICK', true);
 require 'config.php';
 verificaLogin();
 
-// Verifica se o site pertence ao usuário
 $usuarioId = $_SESSION['usuario_id'];
 $siteId = $_GET['site_id'] ?? null;
 
@@ -21,16 +20,13 @@ if (!$site) {
     exit;
 }
 
-// Filtro de datas
-$dataInicio = $_GET['data_inicio'] ?? date('Y-m-01'); // primeiro dia do mês atual
-$dataFim = $_GET['data_fim'] ?? date('Y-m-d'); // hoje
+$dataInicio = $_GET['data_inicio'] ?? date('Y-m-01');
+$dataFim = $_GET['data_fim'] ?? date('Y-m-d');
 
-// Buscar elementos monitorados
 $stmt = $pdo->prepare("SELECT * FROM elementos_monitorados WHERE site_id = ?");
 $stmt->execute([$siteId]);
 $elementos = $stmt->fetchAll();
 
-// Buscar eventos agrupados por data e elemento
 $stmt = $pdo->prepare("
     SELECT 
         DATE(created_at) as data_evento,
@@ -45,17 +41,14 @@ $stmt = $pdo->prepare("
 $stmt->execute([$siteId, $dataInicio . ' 00:00:00', $dataFim . ' 23:59:59']);
 $eventos = $stmt->fetchAll();
 
-// Organizar eventos por elemento_id
 $datas = [];
 $dadosPorElemento = [];
 
-// Mapear nome dos elementos
 $nomesElementos = [];
 foreach ($elementos as $el) {
     $nomesElementos[$el['id']] = $el['nome_elemento'];
 }
 
-// Organizar eventos
 foreach ($eventos as $evento) {
     $dataFormatada = date('d/m/Y', strtotime($evento['data_evento']));
     if (!in_array($dataFormatada, $datas)) {
@@ -69,16 +62,34 @@ foreach ($eventos as $evento) {
     $dadosPorElemento[$elementoId][$dataFormatada] = $evento['total'];
 }
 
-// Garantir que todas as datas existam para todos os elementos
 foreach ($dadosPorElemento as $id => &$dados) {
     foreach ($datas as $data) {
         if (!isset($dados[$data])) {
             $dados[$data] = 0;
         }
     }
-    ksort($dados); // ordenar por data
+    ksort($dados);
 }
 unset($dados);
+
+$cores = [
+    '#0d6efd',
+    '#198754',
+    '#ffc107',
+    '#dc3545',
+    '#6f42c1',
+    '#fd7e14',
+    '#20c997',
+    '#6610f2',
+    '#0dcaf0',
+    '#6c757d'
+];
+$coresPorElemento = [];
+$indiceCor = 0;
+foreach ($elementos as $el) {
+    $coresPorElemento[$el['id']] = $cores[$indiceCor % count($cores)];
+    $indiceCor++;
+}
 ?>
 
 <!DOCTYPE html>
@@ -89,6 +100,7 @@ unset($dados);
     <title>Detalhes do Site - Pegaclick</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" crossorigin="anonymous" />
 </head>
 
 <body class="bg-light p-4">
@@ -116,49 +128,35 @@ unset($dados);
                     <input type="date" name="data_fim" id="data_fim" class="form-control" value="<?= htmlspecialchars($dataFim) ?>">
                 </div>
                 <div class="col-md-4 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary">Filtrar</button>
+                    <button type="submit" class="btn btn-primary mx-2">Filtrar</button>
+                    <a class="btn btn-danger mx-2" href="http://localhost/pegaclick.com/site.php?site_id=<?= $siteId ?>">Limpar</a>
                 </div>
             </form>
         </div>
 
         <div class="card p-4 mb-4">
-            <h2 class="h5 mb-3">Eventos Registrados</h2>
-            <canvas id="graficoEventos"></canvas>
-        </div>
-
-        <div class="card p-4 mb-4">
+            <a href="cadastrar_elemento.php?site_id=<?= $siteId ?>" class="btn btn-primary mb-4">+ Cadastrar Novo Elemento</a>
             <h2 class="h5 mb-3">Elementos Monitorados</h2>
             <?php if (count($elementos) > 0): ?>
                 <ul class="list-group">
-                    <?php
-                    $cores = [
-                        '#0d6efd',
-                        '#198754',
-                        '#ffc107',
-                        '#dc3545',
-                        '#6f42c1',
-                        '#fd7e14',
-                        '#20c997',
-                        '#6610f2',
-                        '#0dcaf0',
-                        '#6c757d'
-                    ];
-                    $corIndex = 0;
-                    ?>
                     <?php foreach ($elementos as $el): ?>
                         <li class="list-group-item d-flex align-items-center">
-                            <i class="fas fa-circle me-2" style="color: <?= $cores[$corIndex % count($cores)] ?>;"></i>
+                            <i class="fa-solid fa-chart-line me-2" style="color: <?= $coresPorElemento[$el['id']] ?>;"></i>
                             <div>
                                 <strong><?= htmlspecialchars($el['nome_elemento']) ?></strong><br>
                                 <small><?= htmlspecialchars($el['descricao']) ?></small>
                             </div>
                         </li>
-                        <?php $corIndex++; ?>
                     <?php endforeach; ?>
                 </ul>
             <?php else: ?>
                 <p class="text-muted">Nenhum elemento monitorado cadastrado.</p>
             <?php endif; ?>
+        </div>
+
+        <div class="card p-4 mb-4">
+            <h2 class="h5 mb-3">Eventos Registrados</h2>
+            <canvas id="graficoEventos"></canvas>
         </div>
 
     </div>
@@ -170,19 +168,15 @@ unset($dados);
             data: {
                 labels: <?= json_encode($datas) ?>,
                 datasets: [
-                    <?php
-                    $corIndex = 0;
-                    foreach ($dadosPorElemento as $id => $dados):
-                    ?> {
+                    <?php foreach ($dadosPorElemento as $id => $dados): ?> {
                             label: '<?= htmlspecialchars($nomesElementos[$id] ?? 'Elemento') ?>',
                             data: <?= json_encode(array_values($dados)) ?>,
                             fill: false,
-                            borderColor: '<?= $cores[$corIndex % count($cores)] ?>',
-                            backgroundColor: '<?= $cores[$corIndex % count($cores)] ?>',
+                            borderColor: '<?= $coresPorElemento[$id] ?? '#0d6efd' ?>',
+                            backgroundColor: '<?= $coresPorElemento[$id] ?? '#0d6efd' ?>',
                             tension: 0.3
                         },
-                    <?php $corIndex++;
-                    endforeach; ?>
+                    <?php endforeach; ?>
                 ]
             },
             options: {

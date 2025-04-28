@@ -2,6 +2,7 @@
 define('PEGACLICK', true);
 require 'config.php';
 
+// Permitir CORS
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
@@ -61,14 +62,17 @@ if (!$el) {
     $elementoId = $el['id'];
 }
 
-// Inserir ou atualizar evento
+// Definir a data atual
+$dataEvento = date('Y-m-d');
+
+// Inserir ou atualizar evento (agora com data_evento também)
 $stmt = $pdo->prepare("
-    INSERT INTO eventos (site_id, elemento_id, pagina, evento, quantidade)
-    VALUES (?, ?, ?, ?, 1)
+    INSERT INTO eventos (site_id, elemento_id, pagina, evento, data_evento, quantidade)
+    VALUES (?, ?, ?, ?, ?, 1)
     ON DUPLICATE KEY UPDATE
         quantidade = quantidade + 1,
         updated_at = CURRENT_TIMESTAMP
 ");
-$stmt->execute([$siteId, $elementoId, $pagina, $evento]);
+$stmt->execute([$siteId, $elementoId, $pagina, $evento, $dataEvento]);
 
 echo json_encode(['status' => 'ok']);

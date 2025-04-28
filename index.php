@@ -30,7 +30,6 @@ $sites = $stmt->fetchAll();
         <!-- Ações -->
         <div class="mb-4">
             <a href="cadastrar_site.php" class="btn btn-success mb-2">+ Cadastrar Novo Site</a>
-            <a href="cadastrar_elemento.php" class="btn btn-primary mb-2">+ Cadastrar Novo Elemento</a>
             <a href="doc.php" class="btn btn-secondary mb-2">📄 Documentação</a>
         </div>
 
